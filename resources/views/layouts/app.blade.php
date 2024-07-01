@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -55,17 +55,26 @@
                 </button>
 
                 <button data-dropdown class="flex items-center px-3 py-2 focus:outline-none hover:bg-gray-200 hover:rounded-md" type="button" x-data="{ open: false }" @click="open = true" :class="{ 'bg-gray-200 rounded-md': open }">
-                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=100&h=100&q=80" alt="Profle" class="h-8 w-8 rounded-full">
+                    <div id="app">
+                        <img src="{{ asset('uploads/' . $user->foto) }}" alt="Company Photo" class="h-8 w-8 rounded-full">
+                    </div>
 
-                    <span class="ml-4 text-sm hidden md:inline-block">Cairocoders</span>
+                    <span class="ml-4 text-sm hidden md:inline-block">{{ Auth::user()->name }}</span>
                     <svg class="fill-current w-3 ml-4" viewBox="0 0 407.437 407.437">
                         <path d="M386.258 91.567l-182.54 181.945L21.179 91.567 0 112.815 203.718 315.87l203.719-203.055z" />
                     </svg>
 
                     <div data-dropdown-items class="text-sm text-left absolute top-0 right-0 mt-16 mr-4 bg-white rounded border border-gray-400 shadow" x-show="open" @click.away="open = false">
-                        <ul>
-                            <li class="px-4 py-3 border-b hover:bg-gray-200"><a href="#">My Profile</a></li>
-                            <li class="px-4 py-3 border-b hover:bg-gray-200"><a href="#">Settings</a></li>
+                        <ul>@if(auth()->user()->type == 'admin')
+                            <li class="px-4 py-3 border-b hover:bg-gray-200"><a href="{{ route('admin/profile') }}">My Profile</a></li>
+                            @elseif(auth()->user()->type == 'supervisor')
+                            <li class="px-4 py-3 border-b hover:bg-gray-200"><a href="{{ route('supervisor/profile') }}">My Profile</a></li>
+                            @elseif(auth()->user()->type == 'petugas')
+                            <li class="px-4 py-3 border-b hover:bg-gray-200"><a href="{{ route('petugas/profile') }}">My Profile</a></li>
+                            @else
+                            <li class="px-4 py-3 border-b hover:bg-gray-200"><a href="{{ route('pengguna/profile') }}">My Profile</a></li>
+                            @endif
+
                             <li class="px-4 py-3 hover:bg-gray-200"><a href="{{ route('logout') }}">Log out</a></li>
                         </ul>
                     </div>
@@ -74,14 +83,17 @@
             </div>
         </div>
     </header>
-
+@if (auth()->user()->type == 'admin')
     <div class="flex flex-row">
         <div class="flex flex-col w-64 h-screen overflow-y-auto bg-gray-900 border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
             <div class="sidebar text-center bg-gray-900">
                 <div class="text-gray-100 text-xl">
                     <div class="p-2.5 mt-1 flex items-center">
-                        <i class="bi bi-app-indicator px-2 py-1 rounded-md bg-blue-600"></i>
-                        <h1 class="font-bold text-gray-200 text-[15px] ml-3">Admin</h1>
+
+                        <div id="app">
+                            <img src="{{ asset('uploads/' . $settings->foto) }}" alt="Company Photo" class="w-8 h-8 object-cover">
+                        </div>
+                        <h1 class="font-bold text-gray-200 text-[15px] ml-3">{{$settings->nama_perusahaan}}</h1>
                     </div>
                     <div class="my-2 bg-gray-600 h-[1px]"></div>
                 </div>
@@ -101,10 +113,42 @@
                         <span class="text-[15px] ml-4 text-gray-200 font-bold">Product</span>
                     </div>
                 </a>
+                <a href="{{ route('admin/user') }}">
+                    <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                        <i class="bi bi-bookmark-fill"></i>
+                        <span class="text-[15px] ml-4 text-gray-200 font-bold">User</span>
+                    </div>
+                </a>
+                <a href="{{ route('admin/tipekamar') }}">
+                    <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                        <i class="bi bi-bookmark-fill"></i>
+                        <span class="text-[15px] ml-4 text-gray-200 font-bold">Tipe Kamar</span>
+                    </div>
+                </a>
+
+                <a href="{{ route('admin/kamar') }}">
+                    <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                        <i class="bi bi-bookmark-fill"></i>
+                        <span class="text-[15px] ml-4 text-gray-200 font-bold">Daftar Kamar</span>
+                    </div>
+                </a>
+
                 <a href="{{ route('admin/profile') }}">
                     <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
                         <i class="bi bi-bookmark-fill"></i>
                         <span class="text-[15px] ml-4 text-gray-200 font-bold">Profile</span>
+                    </div>
+                </a>
+                <a href="{{ route('admin/lantai') }}">
+                    <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                        <i class="bi bi-bookmark-fill"></i>
+                        <span class="text-[15px] ml-4 text-gray-200 font-bold">Lantai</span>
+                    </div>
+                </a>
+                <a href="{{ route('admin/setting') }}">
+                    <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                        <i class="bi bi-bookmark-fill"></i>
+                        <span class="text-[15px] ml-4 text-gray-200 font-bold">setting</span>
                     </div>
                 </a>
                 <a href="{{ route('logout') }}">
@@ -120,6 +164,219 @@
             <div>@yield('contents')</div>
         </div>
     </div>
+@elseif (auth()->user()->type == 'supervisor')
+<div class="flex flex-row">
+    <div class="flex flex-col w-64 h-screen overflow-y-auto bg-gray-900 border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
+        <div class="sidebar text-center bg-gray-900">
+            <div class="text-gray-100 text-xl">
+                <div class="p-2.5 mt-1 flex items-center">
+
+                    <div id="app">
+                        <img src="{{ asset('uploads/' . $settings->foto) }}" alt="Company Photo" class="w-8 h-8 object-cover">
+                    </div>
+                    <h1 class="font-bold text-gray-200 text-[15px] ml-3">{{$settings->nama_perusahaan}}</h1>
+                </div>
+                <div class="my-2 bg-gray-600 h-[1px]"></div>
+            </div>
+            <div class="p-2.5 flex items-center rounded-md px-4 duration-300 cursor-pointer bg-gray-700 text-white">
+                <i class="bi bi-search text-sm"></i>
+                <input type="text" placeholder="Search" class="text-[15px] ml-4 w-full bg-transparent focus:outline-none" />
+            </div>
+            <a href="{{ route('supervisor/home') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-house-door-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Home</span>
+                </div>
+            </a>
+            <a href="{{ route('supervisor/products') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Product</span>
+                </div>
+            </a>
+            <a href="{{ route('supervisor/user') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">User</span>
+                </div>
+            </a>
+            <a href="{{ route('supervisor/tipekamar') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Tipe Kamar</span>
+                </div>
+            </a>
+
+            <a href="{{ route('supervisor/profile') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Profile</span>
+                </div>
+            </a>
+            <a href="{{ route('supervisor/lantai') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Lantai</span>
+                </div>
+            </a>
+            <a href="{{ route('supervisor/setting') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">setting</span>
+                </div>
+            </a>
+            <a href="{{ route('logout') }}">
+                <div class="my-4 bg-gray-600 h-[1px]"></div>
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Logout</span>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="flex flex-col w-full h-screen px-4 py-8 mt-10">
+        <div>@yield('contents')</div>
+    </div>
+</div>
+@elseif (auth()->user()->type == 'petugas')
+<div class="flex flex-row">
+    <div class="flex flex-col w-64 h-screen overflow-y-auto bg-gray-900 border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
+        <div class="sidebar text-center bg-gray-900">
+            <div class="text-gray-100 text-xl">
+                <div class="p-2.5 mt-1 flex items-center">
+
+                    <div id="app">
+                        <img src="{{ asset('uploads/' . $settings->foto) }}" alt="Company Photo" class="w-8 h-8 object-cover">
+                    </div>
+                    <h1 class="font-bold text-gray-200 text-[15px] ml-3">{{$settings->nama_perusahaan}}</h1>
+                </div>
+                <div class="my-2 bg-gray-600 h-[1px]"></div>
+            </div>
+            <div class="p-2.5 flex items-center rounded-md px-4 duration-300 cursor-pointer bg-gray-700 text-white">
+                <i class="bi bi-search text-sm"></i>
+                <input type="text" placeholder="Search" class="text-[15px] ml-4 w-full bg-transparent focus:outline-none" />
+            </div>
+            <a href="{{ route('petugas/home') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-house-door-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Home</span>
+                </div>
+            </a>
+            <a href="{{ route('petugas/products') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Product</span>
+                </div>
+            </a>
+            <a href="{{ route('petugas/user') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">User</span>
+                </div>
+            </a>
+            <a href="{{ route('petugas/tipekamar') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Tipe Kamar</span>
+                </div>
+            </a>
+
+            <a href="{{ route('petugas/profile') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Profile</span>
+                </div>
+            </a>
+            <a href="{{ route('petugas/lantai') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Lantai</span>
+                </div>
+            </a>
+            <a href="{{ route('logout') }}">
+                <div class="my-4 bg-gray-600 h-[1px]"></div>
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Logout</span>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="flex flex-col w-full h-screen px-4 py-8 mt-10">
+        <div>@yield('contents')</div>
+    </div>
+</div>
+@elseif (auth()->user()->type == 'pengguna')
+<div class="flex flex-row">
+    <div class="flex flex-col w-64 h-screen overflow-y-auto bg-gray-900 border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
+        <div class="sidebar text-center bg-gray-900">
+            <div class="text-gray-100 text-xl">
+                <div class="p-2.5 mt-1 flex items-center">
+
+                    <div id="app">
+                        <img src="{{ asset('uploads/' . $settings->foto) }}" alt="Company Photo" class="w-8 h-8 object-cover">
+                    </div>
+                    <h1 class="font-bold text-gray-200 text-[15px] ml-3">{{$settings->nama_perusahaan}}</h1>
+                </div>
+                <div class="my-2 bg-gray-600 h-[1px]"></div>
+            </div>
+            <div class="p-2.5 flex items-center rounded-md px-4 duration-300 cursor-pointer bg-gray-700 text-white">
+                <i class="bi bi-search text-sm"></i>
+                <input type="text" placeholder="Search" class="text-[15px] ml-4 w-full bg-transparent focus:outline-none" />
+            </div>
+            <a href="{{ route('pengguna/home') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-house-door-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Home</span>
+                </div>
+            </a>
+            <a href="{{ route('pengguna/products') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Product</span>
+                </div>
+            </a>
+            <a href="{{ route('pengguna/user') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">User</span>
+                </div>
+            </a>
+            <a href="{{ route('pengguna/tipekamar') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Tipe Kamar</span>
+                </div>
+            </a>
+
+            <a href="{{ route('pengguna/profile') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Profile</span>
+                </div>
+            </a>
+            {{-- <a href="{{ route('pengguna/setting') }}">
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-bookmark-fill"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">setting</span>
+                </div>
+            </a> --}}
+            <a href="{{ route('logout') }}">
+                <div class="my-4 bg-gray-600 h-[1px]"></div>
+                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Logout</span>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="flex flex-col w-full h-screen px-4 py-8 mt-10">
+        <div>@yield('contents')</div>
+    </div>
+</div>
+@endif
+
+
 </body>
 
 </html>

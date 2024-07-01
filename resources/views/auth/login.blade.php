@@ -19,6 +19,17 @@
                 Login
             </div>
             <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div class="p-2.5 mt-1 flex items-center">
+
+                    <div id="app">
+                        <img src="{{ asset('uploads/' . $settings->foto) }}" alt="Company Photo" class="w-15 h-15 object-cover">
+                    </div>
+
+                </div>
+                <div style="text-align: center;">
+                    <h1 class="font-bold text-black-200 text-[15px] ml-3">{{$settings->nama_perusahaan}}</h1>
+                </div>
+
                 <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         Sign in to your account
@@ -61,9 +72,9 @@
                             <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
                         </div>
                         <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
-                        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                        {{-- <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                             Don’t have an account yet? <a href="{{ route('register') }}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
-                        </p>
+                        </p> --}}
                     </form>
                 </div>
             </div>

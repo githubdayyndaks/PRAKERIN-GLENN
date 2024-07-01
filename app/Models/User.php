@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -22,6 +23,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'type',
+        'alamat',
+        'gender',
+        'nohp',
+        'foto',
         'password',
     ];
 
@@ -48,7 +54,17 @@ class User extends Authenticatable
     protected function type(): Attribute
     {
         return new Attribute(
-            get: fn ($value) =>  ["user", "admin"][$value],
+            get: fn ($value) =>  ["pengguna", "admin", "supervisor", "petugas"][$value],
         );
+    }
+
+    public function getJWTIdentifier()
+    {
+      return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+      return [];
     }
 }

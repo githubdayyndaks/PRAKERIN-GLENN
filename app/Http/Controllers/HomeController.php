@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\setting;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,11 +13,31 @@ class HomeController extends Controller
 
     public function index()
     {
+
         return view('home');
     }
 
     public function adminHome()
     {
-        return view('dashboard');
+        $settings = Setting::first();
+        return view('dashboard', compact('settings'));
+    }
+
+    public function supervisorHome()
+    {
+        $settings = Setting::first();
+        return view('dashboard', compact('settings'));
+    }
+
+    public function petugasHome()
+    {
+        $settings = Setting::first();
+        return view('dashboard', compact('settings'));
+    }
+
+    public function PenggunaHome()
+    {
+        $settings = Setting::first();
+        return view('dashboard', compact('settings'));
     }
 }
